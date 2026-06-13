@@ -28,8 +28,21 @@
   --safe-b: env(safe-area-inset-bottom, 0px);
 }
 
-*{ box-sizing:border-box; }
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 *::selection{ background:var(--gold); color:var(--paper); }
+
+/* feedback al tocar (sin el resaltado azul del sistema) */
+button, .ch-head, .seg button, .dock-btn, .attr-toggle, .brand, .presence, .link-btn, a, [role="textbox"]{
+  -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none;
+}
+.ch-head:active{ background:rgba(138,106,34,.14); }
+.dock-btn:active{ background:rgba(29,24,16,.08); }
+.dock-write:active{ background:#000; }
+.seg button:active, .link-btn:active, .attr-toggle:active{ opacity:.55; }
+.btn-ghost:active{ background:var(--ink); color:var(--paper); }
+.btn-ghost.gold:active{ background:var(--gold); color:var(--paper); }
+.wb-sign:not(:disabled):active, .btn-pay:not(.paying):active, .btn-sell:active{ transform:translateY(1px); background:var(--gold); color:var(--paper); border-color:var(--gold); }
+.owner-row:active, .av:active, .frag:active{ background:rgba(138,106,34,.10); }
 
 html,body{ margin:0; padding:0; }
 html{ -webkit-text-size-adjust:100%; }
