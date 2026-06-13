@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# QA / scratch artifacts (underscore-prefixed)
+_qa/
+_qa*.js
+_edge_profile/
+_shot_*.png
+_*.tmp
+
+# Puppeteer / browser profiles & artifacts
+.cache/
+*.png.tmp
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build output
+dist/
+build/
