@@ -298,11 +298,11 @@ input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:0; b
   transform:translateY(110%); opacity:0; pointer-events:none; transition:transform .4s cubic-bezier(.2,.8,.2,1), opacity .3s; }
 .write-bar.show{ transform:translateY(0); opacity:1; pointer-events:auto; }
 .wb-quill{ color:var(--gold); display:grid; place-items:center; flex:0 0 auto; }
-.wb-meta{ display:flex; flex-direction:column; line-height:1.05; flex:1; }
-.wb-words{ font-family:var(--label); font-size:8.5px; text-transform:uppercase; letter-spacing:.18em; color:var(--ink-3); }
-.wb-words b{ color:var(--ink); font-family:var(--display); }
-.wb-cost{ font-family:var(--display); font-weight:600; font-size:20px; color:var(--ink); font-feature-settings:'tnum' 1; }
-.wb-cost .euro{ color:var(--gold); font-size:14px; }
+.wb-meta{ display:flex; flex-direction:column; line-height:1.12; flex:1; }
+.wb-label{ font-family:var(--label); font-size:8.5px; text-transform:uppercase; letter-spacing:.18em; color:var(--ink-3); }
+.wb-words{ font-family:var(--display); font-weight:600; font-size:19px; color:var(--ink); font-feature-settings:'tnum' 1; }
+.wb-words b{ color:var(--ink); }
+.wb-sign #wbCost{ color:var(--gold-2); font-weight:700; }
 .wb-sign{ flex:0 0 auto; border:1.5px solid var(--ink); cursor:pointer; display:inline-flex; align-items:center; gap:8px;
   background:var(--ink); color:var(--paper); font-family:var(--label); font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
   padding:12px 18px; transition:.15s; white-space:nowrap; }

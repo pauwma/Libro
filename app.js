@@ -101,6 +101,8 @@
   function chWords(ch){ var n=0; for(var i=0;i<ch.frags.length;i++) n+=countWords(ch.frags[i].t); return n; }
   function totalWords(){ var n=0; for(var i=0;i<state.chapters.length;i++) n+=chWords(state.chapters[i]); return n; }
   function authorWords(id){ var n=0; for(var i=0;i<state.chapters.length;i++){ var fr=state.chapters[i].frags; for(var j=0;j<fr.length;j++) if(fr[j].a===id) n+=countWords(fr[j].t); } return n; }
+  function authorFragCount(id){ var n=0; state.chapters.forEach(function(c){ c.frags.forEach(function(fr){ if(fr.a===id) n++; }); }); return n; }
+  function authorChapters(id){ var n=0; state.chapters.forEach(function(c){ if(c.frags.some(function(fr){return fr.a===id;})) n++; }); return n; }
   function ownersList(){ var ids={},out=[]; state.chapters.forEach(function(c){ c.frags.forEach(function(fr){ ids[fr.a]=true; }); }); for(var id in ids) out.push({id:id, words:authorWords(id)}); out.sort(function(a,b){return b.words-a.words;}); return out; }
   function openChapter(){ for(var i=0;i<state.chapters.length;i++) if(state.chapters[i].status==='open') return state.chapters[i]; return null; }
   function fmt(n){ return Math.round(n).toLocaleString('es-ES'); }
@@ -115,13 +117,12 @@
   function renderStatsShell(){
     $('#topstats').innerHTML =
       statCell('stWords','palabras') +
-      statCell('stRaised','recaudado', true) +
       statCell('stOwners','autores') +
       '<div class="stat you"><div class="stat-num" id="stYou">0%</div><div class="stat-lbl">tu parte</div></div>';
     $('#heroMeta').innerHTML =
-      '<div class="hm"><div class="hm-num"><span class="euro">€</span><span id="hmRaised">0</span></div><div class="hm-lbl">recaudado</div></div>'+
-      '<div class="hm"><div class="hm-num"><span id="hmWords">0</span></div><div class="hm-lbl">palabras</div></div>'+
-      '<div class="hm"><div class="hm-num"><span id="hmOwners">0</span></div><div class="hm-lbl">co-autores</div></div>';
+      '<div class="hm"><div class="hm-num"><span id="hmWords">0</span></div><div class="hm-lbl">palabras &middot; €</div></div>'+
+      '<div class="hm"><div class="hm-num"><span id="hmOwners">0</span></div><div class="hm-lbl">co-autores</div></div>'+
+      '<div class="hm"><div class="hm-num"><span id="hmYou">0%</span></div><div class="hm-lbl">tu parte</div></div>';
     updateStats();
   }
   function statCell(id,lbl,euro){
@@ -129,8 +130,8 @@
   }
   function updateStats(){
     var tw=totalWords(), owners=ownersList().length, youW=authorWords('you'), youPct=tw?youW/tw*100:0;
-    setText('#stWords',fmt(tw)); setText('#stRaised',fmt(tw)); setText('#stOwners',fmt(owners)); setText('#stYou',youPct.toFixed(1)+'%');
-    setText('#hmRaised',fmt(tw)); setText('#hmWords',fmt(tw)); setText('#hmOwners',fmt(owners));
+    setText('#stWords',fmt(tw)); setText('#stOwners',fmt(owners)); setText('#stYou',youPct.toFixed(1)+'%');
+    setText('#hmWords',fmt(tw)); setText('#hmOwners',fmt(owners)); setText('#hmYou',youPct.toFixed(1)+'%');
     setText('#presenceCount',state.presence);
   }
 
@@ -205,7 +206,7 @@
     if(ch.status==='sealed'){
       state='<span class="ch-state sealed">Sellado</span>';
       folio='<span class="ch-folio">'+fmt(w)+'</span>';
-      foot='<div class="sealed-note">Capítulo cerrado e inmortalizado · '+fmt(w)+' palabras · '+fmt(w)+'&nbsp;€</div>';
+      foot='<div class="sealed-note">Capítulo cerrado e inmortalizado · '+fmt(w)+' palabras</div>';
     } else if(ch.status==='open'){
       state='<span class="ch-state open">Abierto</span>';
       folio='<span class="ch-folio" data-folio="1">'+fmt(w)+'</span>';
@@ -318,7 +319,7 @@
   }
   function showTip(e){
     var id=this.getAttribute('data-author'); var a=AUTHORS[id]||AUTHORS.you; var w=countWords(this.textContent);
-    tip.innerHTML='<div class="tip-name">'+esc(a.name)+(a.you?' (tú)':'')+'</div><div class="tip-meta">'+w+' palabras · '+w+'&nbsp;€ aquí</div>';
+    tip.innerHTML='<div class="tip-name">'+esc(a.name)+(a.you?' (tú)':'')+'</div><div class="tip-meta">'+w+' palabra'+(w===1?'':'s')+' en esta frase</div>';
     tip.classList.add('show'); moveTip.call(this,e);
   }
   function moveTip(e){
@@ -436,7 +437,8 @@
     var willSeal = chWords(ch)>=ch.goal;
     if(willSeal){ sealChapter(ch); }
     else { appendCommitted(ch,{a:'you',t:text},{fresh:true,scroll:true}); closeCheckout(); }
-    toast('Has firmado '+w+' palabra'+(w>1?'s':'')+' · +'+w+'&nbsp;€ de propiedad','gold');
+    var twNow=totalWords(), youPctNow = twNow?authorWords('you')/twNow*100:0;
+    toast('Has firmado '+w+' palabra'+(w>1?'s':'')+' · tu parte ahora: '+youPctNow.toFixed(1)+'%','gold');
     pendingCommit=null;
   }
 
@@ -509,8 +511,8 @@
         '<div class="oh-sub">'+fmt(youW)+' de '+fmt(tw)+' palabras del libro son tuyas</div>'+
         '<div class="own-grid">'+
           og(fmt(youW),'tus palabras')+
-          og('<span class="euro">€</span>'+fmt(youW),'invertido')+
-          og(pct.toFixed(2)+'%','propiedad')+
+          og(fmt(authorFragCount('you')),'frases firmadas')+
+          og(fmt(authorChapters('you')),'capítulos')+
           og('#'+rankOf('you',owners),'en el ranking')+
         '</div>'+
       '</div>'+
