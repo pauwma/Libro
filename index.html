@@ -47,9 +47,12 @@
   <!-- ===== BOOK VIEW ===== -->
   <section class="view view-book is-active" id="view-book">
     <div class="book-hero">
-      <p class="kicker">Obra colectiva en curso · 1&nbsp;€ por palabra</p>
-      <h2 class="book-title">Codex</h2>
-      <p class="book-sub">Cada palabra que escribes te hace dueño de una parte del libro.<br/>Cuando el libro genere ingresos, cobrarás según tu&nbsp;parte.</p>
+      <div class="dateline top">
+        <span>Edición colectiva</span>
+        <span class="spot">Nº I</span>
+        <span>1&nbsp;€ la palabra</span>
+      </div>
+      <p class="standfirst">Un libro escrito por desconocidos. Cada palabra que pagas te hace propietario de una&nbsp;parte; cuando genere ingresos, cobras según lo&nbsp;tuyo.</p>
       <div class="hero-meta" id="heroMeta"><!-- injected --></div>
     </div>
 
@@ -127,9 +130,10 @@
       <p class="kicker center">Firma tu contribución</p>
       <h3 class="modal-title">Estás a punto de escribir en el Codex</h3>
       <div class="receipt" id="receipt"><!-- injected --></div>
-      <div class="card-mock">
-        <div class="card-mock-row"><span>•••• •••• •••• 4242</span><span class="card-brand">DEMO</span></div>
-        <div class="card-mock-row sm"><span>VÁLIDA HASTA</span><span>12/34</span></div>
+      <div class="sign-line">
+        <span class="sign-name">Tú</span>
+        <span class="sign-rule"></span>
+        <span class="sign-cap">Firma del contribuyente · pago simulado</span>
       </div>
       <button class="btn-pay" id="btnPay">
         <span id="payLabel">Pagar <strong id="paySum">0&nbsp;€</strong> y firmar</span>

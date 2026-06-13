@@ -1,5 +1,7 @@
-# Dependencies
+# Dependencies (solo para la QA local con Puppeteer)
 node_modules/
+package.json
+package-lock.json
 
 # Logs
 logs/

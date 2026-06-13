@@ -201,37 +201,38 @@
 
   function chapterHTML(ch,idx){
     var w=chWords(ch), pct=Math.min(100,Math.round(w/ch.goal*100));
-    var badge, mini='', body, foot='';
+    var state, folio, deck='', body, foot='';
     if(ch.status==='sealed'){
-      badge='<span class="badge sealed"><span class="b-dot"></span>Sellado</span>';
-      mini='<span class="ch-mini sealed">'+fmt(w)+' pal.</span>';
+      state='<span class="ch-state sealed">Sellado</span>';
+      folio='<span class="ch-folio">'+fmt(w)+'</span>';
       foot='<div class="sealed-note">Capítulo cerrado e inmortalizado · '+fmt(w)+' palabras · '+fmt(w)+'&nbsp;€</div>';
     } else if(ch.status==='open'){
-      badge='<span class="badge open"><span class="b-dot"></span>Abierto</span>';
-      mini='<span class="ch-mini" data-mini="1">'+pct+'%</span>';
+      state='<span class="ch-state open">Abierto</span>';
+      folio='<span class="ch-folio" data-folio="1">'+fmt(w)+'</span>';
       foot='<div class="ch-contributors">'+contribsHTML(ch)+'</div>';
     } else {
-      badge='<span class="badge locked"><span class="b-dot"></span>Bloqueado</span>';
+      state='<span class="ch-state locked">Cerrado</span>';
+      folio='<span class="ch-folio">&middot;</span>';
     }
     var prog = ch.status!=='locked' ?
       '<div class="ch-progress"><div class="ch-bar"><div class="ch-bar-fill" style="width:'+pct+'%"></div></div>'+
       '<div class="ch-prog-meta">'+progMeta(w,ch.goal,pct)+'</div></div>' : '';
     if(ch.status==='locked'){
-      body='<p class="locked-note">Este capítulo se revelará cuando se selle el anterior. Su temática es una sorpresa.</p>';
+      body='<p class="locked-note">Se revelará cuando se selle el capítulo anterior. Su temática es una sorpresa.</p>';
     } else {
+      deck='<p class="ch-deck">Tema · '+esc(ch.theme)+'</p>';
       body='<div class="prose'+(idx===0?' first':'')+'">'+renderProse(ch, ch.status==='open')+'</div>';
     }
-    var chev='<svg class="ch-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    var chev='<svg class="ch-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
     var expanded = ch.status==='open';
-    var themeLine = ch.status==='locked' ? 'Por revelar' : 'Tema · '+esc(ch.theme);
     return '<article class="chapter '+ch.status+(expanded?' expanded':'')+'" data-ch="'+ch.id+'">'+
-      '<button class="ch-head" type="button" data-head="1">'+
-        '<span class="ch-index">'+roman(idx+1)+'</span>'+
-        '<span class="ch-titles"><span class="ch-title">'+esc(ch.title)+'</span>'+
-          '<span class="ch-theme">'+themeLine+'</span></span>'+
-        '<span class="ch-headright">'+badge+mini+chev+'</span>'+
+      '<button class="ch-head" type="button">'+
+        '<span class="ch-num">'+roman(idx+1)+'</span>'+
+        '<span class="ch-title">'+esc(ch.title)+'</span>'+
+        '<span class="ch-dots" aria-hidden="true"></span>'+
+        folio + state + chev +
       '</button>'+
-      '<div class="ch-body"><div class="ch-body-inner">'+prog+body+foot+'</div></div>'+
+      '<div class="ch-body"><div class="ch-body-inner">'+deck+prog+body+foot+'</div></div>'+
     '</article>';
   }
   function progMeta(w,goal,pct){ return '<span><b>'+fmt(w)+'</b> / '+fmt(goal)+' palabras</span><span>'+pct+'%</span>'; }
@@ -281,7 +282,7 @@
     var w=chWords(ch), pct=Math.min(100,Math.round(w/ch.goal*100));
     var fill=$('.ch-bar-fill', art); if(fill) fill.style.width=pct+'%';
     var meta=$('.ch-prog-meta', art); if(meta) meta.innerHTML=progMeta(w,ch.goal,pct);
-    var mini=$('.ch-mini[data-mini="1"]', art); if(mini) mini.textContent=pct+'%';
+    var folio=$('.ch-folio[data-folio="1"]', art); if(folio) folio.textContent=fmt(w);
     var cc=$('.ch-contributors', art); if(cc) cc.innerHTML=contribsHTML(ch);
   }
 
